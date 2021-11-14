@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class Gamerules : MonoBehaviour
 {
@@ -16,16 +17,36 @@ public class Gamerules : MonoBehaviour
 
     private int CurrentBomb = 1;
     private int maxPlayers = 4;
+    List<string> wordlist = new List<string>();
+
+
+
 
     protected DictationRecognizer dictationRecognizer;
     void Start() //gets called by starting the game
     {
+        Readwordlist();
         StartDictationEngine();
     }
 
     void Update(){ //get called every frame
 
     
+    }
+
+    private void Readwordlist(){
+        var FileName = "wordlist.txt";
+        var sr = new StreamReader(Application.dataPath + "/" + FileName);
+        var fileContents = sr.ReadToEnd();
+        sr.Close();
+ 
+        var lines = fileContents.Split("\n"[0]);
+        
+        foreach (string line in lines){
+            wordlist.Add(line);
+            Debug.Log(line);
+        }
+        
     }
 
     private void DictationRecognizer_OnDictationHypothesis(string text) //Fastest quality recognizer
@@ -43,6 +64,11 @@ public class Gamerules : MonoBehaviour
             Debug.Log("Player 2 bomb: " + Player2.GetComponent<Status>().hasBomb);
             Debug.Log("Player 3 bomb: " + Player3.GetComponent<Status>().hasBomb);
             Debug.Log("Player 4 bomb: " + Player4.GetComponent<Status>().hasBomb);
+        }
+        if (text == "print"){
+            foreach (string word in wordlist){
+                Debug.Log(word);
+            }
         }
     }
 
