@@ -7,6 +7,8 @@ public class Status : MonoBehaviour
     public bool hasBomb = false;
     public bool isDead = false;
 
+    // [SerializeField] private Material myMaterial;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +18,8 @@ public class Status : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // if (isDead){
+        //     myMaterial.color = Color.grey;
+        // }
     }
 }
