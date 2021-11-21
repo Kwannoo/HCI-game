@@ -18,10 +18,17 @@ public class Gamerules : MonoBehaviour
     public Text WordText;
     public Text WarningText;
 
+    public AudioSource Correctsound;
+    public AudioSource Incorrectsound;
+    public AudioSource Backgroundsound;
     //List<GameObject> AmountPlayers;
     
+    public Image TimeBar;
+
     float speed = 5;
-    float BombTime = 10f;
+
+    public float TotalTime = 30f;
+    public float BombTime = 30f;
 
     private int CurrentBomb = 0;
     private int maxPlayers = 4;
@@ -37,11 +44,13 @@ public class Gamerules : MonoBehaviour
         WordText.text = "START!";
         WarningText.text = "";
         StartDictationEngine();
+        //Backgroundsound.pitch = 1.5f;
     }
 
     void Update(){ //get called every frame
-        //Explodebomb();
+        Explodebomb();
         //Debug.Log(BombTime);
+        Changepitch();
         MoveBomb();
     
     }
@@ -60,8 +69,17 @@ public class Gamerules : MonoBehaviour
         
     }
 
+    private void Changepitch(){
+        float speed = 1f + (0.07f*(TotalTime-BombTime)); //change constant
+        Backgroundsound.pitch = speed;
+        Debug.Log(speed);
+    }
+
     private void ChangeStatus(string text, ConfidenceLevel confidence){
-       if (text == "status"){
+        if (CheckWord(text)){
+            NextPlayer();
+        }
+        if (text == "status"){
             Debug.Log("Player 1 bomb: " + Player[0].GetComponent<Status>().hasBomb);
             Debug.Log("Player 2 bomb: " + Player[1].GetComponent<Status>().hasBomb);
             Debug.Log("Player 3 bomb: " + Player[2].GetComponent<Status>().hasBomb);
@@ -86,12 +104,13 @@ public class Gamerules : MonoBehaviour
     
     private void Explodebomb(){
         BombTime -= Time.deltaTime;
+        TimeBar.fillAmount = BombTime/TotalTime;
         if (BombTime < 0){
             GameObject Explosion = Instantiate(Explosioneffect, Bomb.transform.position, Quaternion.identity);
             Destroy(Explosion, 1);
             Player[CurrentBomb].GetComponent<Status>().isDead = true;
             NextPlayer();
-            BombTime = 10f;
+            BombTime = TotalTime;
         }
     }
     private void MoveBomb(){
@@ -137,6 +156,7 @@ public class Gamerules : MonoBehaviour
                         WordText.text = text;
                         WordText.GetComponent<Text>().color = Color.red;
                         WarningText.text = "This word has already been said";
+                        Incorrectsound.Play();
                         return false;
                     }
                 }
@@ -144,6 +164,8 @@ public class Gamerules : MonoBehaviour
                 WordText.GetComponent<Text>().color = Color.green;
                 WarningText.text = "";
                 Wordssaid.Add(text);
+                Correctsound.Play();
+                BombTime += 2f;
                 return true;
             }
 
@@ -151,6 +173,7 @@ public class Gamerules : MonoBehaviour
         WordText.text = text;
         WordText.GetComponent<Text>().color = Color.red;
         WarningText.text = "This word is not in the wordlist!";
+        Incorrectsound.Play();
         return false;
     }
 
