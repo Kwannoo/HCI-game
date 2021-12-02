@@ -155,6 +155,7 @@ public class Gamerules : MonoBehaviour
                     if(item1.Contains(text)){
                         WordText.text = text;
                         WordText.GetComponent<Text>().color = Color.red;
+                        WarningText.GetComponent<Text>().color = Color.red;
                         WarningText.text = "This word has already been said";
                         Incorrectsound.Play();
                         return false;
@@ -162,7 +163,8 @@ public class Gamerules : MonoBehaviour
                 }
                 WordText.text = text;
                 WordText.GetComponent<Text>().color = Color.green;
-                WarningText.text = "";
+                WarningText.GetComponent<Text>().color = Color.green;
+                WarningText.text = "Good job!";
                 Wordssaid.Add(text);
                 Correctsound.Play();
                 BombTime += 2f;
@@ -172,6 +174,7 @@ public class Gamerules : MonoBehaviour
         }
         WordText.text = text;
         WordText.GetComponent<Text>().color = Color.red;
+        WarningText.GetComponent<Text>().color = Color.red;
         WarningText.text = "This word is not in the wordlist!";
         Incorrectsound.Play();
         return false;
