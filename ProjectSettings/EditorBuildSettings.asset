@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/4Players.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
     path: Assets/Scenes/Start.unity
     guid: 1c92164f27f3add4397e9cd8bc727d6e
+  - enabled: 1
+    path: Assets/Scenes/4Players.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/Character.unity
     guid: a602817b0fe35054e93bb42cfad88c14
@@ -20,4 +20,34 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/4Names.unity
     guid: f2b1a20ce101cf44cacfc42e38ca025e
+  - enabled: 1
+    path: Assets/Scenes/2Names.unity
+    guid: f41174df8eab71b43893e91a78abd35f
+  - enabled: 1
+    path: Assets/Scenes/3Names.unity
+    guid: 03c6a0e4e955c8b41a85dcd5069ee1f1
+  - enabled: 1
+    path: Assets/Scenes/5Names.unity
+    guid: 86cf48a652c9ed9459e04902472bf53a
+  - enabled: 1
+    path: Assets/Scenes/Instructions1.unity
+    guid: 549f8125381eadb46b4d2716583d6aee
+  - enabled: 1
+    path: Assets/Scenes/Instructions2.unity
+    guid: ab9f7e76227d447488c9cd6e46331809
+  - enabled: 1
+    path: Assets/Scenes/Instructions3.unity
+    guid: af66949d90f558341a1f87bc499abff1
+  - enabled: 1
+    path: Assets/Scenes/2Players.unity
+    guid: 64ea6a5b560f5704f8365421b6397d82
+  - enabled: 1
+    path: Assets/Scenes/3Players.unity
+    guid: 2c68bcc438a14a944b2e6f6a3298d05b
+  - enabled: 1
+    path: Assets/Scenes/5Players.unity
+    guid: f26c5cf4c3543574aa0f57db80c28047
+  - enabled: 1
+    path: Assets/Scenes/Gameover.unity
+    guid: 342beaa56d3efe34fb13a09ea1680835
   m_configObjects: {}

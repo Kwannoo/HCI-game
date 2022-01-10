@@ -23,16 +23,16 @@ public class Startmenu : MonoBehaviour
 
         switch (Numberplayers.players){
             case 2:
-                SceneManager.LoadScene("4Names");
+                SceneManager.LoadScene("2Names");
                 break;
             case 3:
-                SceneManager.LoadScene("4Names");
+                SceneManager.LoadScene("3Names");
                 break;
             case 4:
                 SceneManager.LoadScene("4Names");
                 break;
             case 5:
-                SceneManager.LoadScene("4Names");
+                SceneManager.LoadScene("5Names");
                 break;
             default:
                 Application.Quit();
@@ -91,4 +91,14 @@ public class Startmenu : MonoBehaviour
     public void CharacterBack(){
         SceneManager.LoadScene("Character");
     }
+    public void Instructions1(){
+        SceneManager.LoadScene("Instructions1");
+    }
+    public void Instructions2(){
+        SceneManager.LoadScene("Instructions2");
+    }
+    public void Instructions3(){
+        SceneManager.LoadScene("Instructions3");
+    }
+
 }

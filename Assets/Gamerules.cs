@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Windows.Speech;
 using UnityEngine.SceneManagement;
 using System.IO;
+using TMPro;
 
 public class Gamerules : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class Gamerules : MonoBehaviour
 
     public GameObject Explosioneffect;
 
-    public Text WordText;
+    public TextMeshProUGUI WordText;
+    //public Text WordText;
     public Text WarningText;
 
     public AudioSource Correctsound;
@@ -31,7 +33,8 @@ public class Gamerules : MonoBehaviour
     public float BombTime = 30f;
 
     private int CurrentBomb = 0;
-    private int maxPlayers = 4;
+    private int maxPlayers = 0;
+    private int PlayersAlive;
     //private float speed = Time.deltaTime;
     List<string> wordlist = new List<string>();
     List<string> Wordssaid = new List<string>();
@@ -39,7 +42,9 @@ public class Gamerules : MonoBehaviour
     protected DictationRecognizer dictationRecognizer;
 
     void Start() { //gets called by starting the game
-
+        maxPlayers = Player.Count;
+        Gameoverr.PlayTime = 0;
+        PlayersAlive = maxPlayers;
         Readwordlist();
         WordText.text = "START!";
         WarningText.text = "";
@@ -54,6 +59,7 @@ public class Gamerules : MonoBehaviour
         MoveBomb();
     
     }
+
 
     private void Readwordlist(){
         var FileName = "wordlist.txt";
@@ -72,10 +78,10 @@ public class Gamerules : MonoBehaviour
     private void Changepitch(){
         float speed = 1f + (0.07f*(TotalTime-BombTime)); //change constant
         Backgroundsound.pitch = speed;
-        Debug.Log(speed);
+        //Debug.Log(speed);
     }
 
-    private void ChangeStatus(string text, ConfidenceLevel confidence){
+    private void ChangeStatus(string text){//, ConfidenceLevel confidence){
         if (CheckWord(text)){
             NextPlayer();
         }
@@ -101,15 +107,49 @@ public class Gamerules : MonoBehaviour
             Debug.Log(Player[0].GetComponent<Status>().hasBomb);
         }
     }
+
+    private string FindName(int winner){
+        switch(winner){
+            case 0:
+                return Numberplayers.player0;
+                break;
+            case 1:
+                return Numberplayers.player1;
+                break;
+            case 2:
+                return Numberplayers.player2;
+                break;
+            case 3:
+                return Numberplayers.player3;
+                break;
+            case 4:
+                return Numberplayers.player4;
+                break;
+
+        } 
+        return "";
+    }
     
     private void Explodebomb(){
         BombTime -= Time.deltaTime;
+        Gameoverr.PlayTime += Time.deltaTime;
         TimeBar.fillAmount = BombTime/TotalTime;
         if (BombTime < 0){
+            PlayersAlive--;
             GameObject Explosion = Instantiate(Explosioneffect, Bomb.transform.position, Quaternion.identity);
             Destroy(Explosion, 1);
             Player[CurrentBomb].GetComponent<Status>().isDead = true;
+            string playerout = FindName(CurrentBomb);
+            WordText.GetComponent<TextMeshProUGUI>().color = Color.red;
+            WordText.text = playerout + " is out of the game!";
+            WarningText.text = "";
+
             NextPlayer();
+            if (PlayersAlive == 1){
+                Gameoverr.Winner = FindName(CurrentBomb);
+                //Gameoverr.Winner = CurrentBomb;
+                SceneManager.LoadScene("Gameover");
+            }
             BombTime = TotalTime;
         }
     }
@@ -154,7 +194,7 @@ public class Gamerules : MonoBehaviour
                 foreach(string item1 in Wordssaid){
                     if(item1.Contains(text)){
                         WordText.text = text;
-                        WordText.GetComponent<Text>().color = Color.red;
+                        WordText.GetComponent<TextMeshProUGUI>().color = Color.red;
                         WarningText.GetComponent<Text>().color = Color.red;
                         WarningText.text = "This word has already been said";
                         Incorrectsound.Play();
@@ -162,7 +202,7 @@ public class Gamerules : MonoBehaviour
                     }
                 }
                 WordText.text = text;
-                WordText.GetComponent<Text>().color = Color.green;
+                WordText.GetComponent<TextMeshProUGUI>().color = Color.green;
                 WarningText.GetComponent<Text>().color = Color.green;
                 WarningText.text = "Good job!";
                 Wordssaid.Add(text);
@@ -173,7 +213,7 @@ public class Gamerules : MonoBehaviour
 
         }
         WordText.text = text;
-        WordText.GetComponent<Text>().color = Color.red;
+        WordText.GetComponent<TextMeshProUGUI>().color = Color.red;
         WarningText.GetComponent<Text>().color = Color.red;
         WarningText.text = "This word is not in the wordlist!";
         Incorrectsound.Play();
@@ -226,11 +266,11 @@ public class Gamerules : MonoBehaviour
     private void StartDictationEngine() //Handles the spoken word
     {
         dictationRecognizer = new DictationRecognizer();
-        dictationRecognizer.DictationHypothesis += DictationRecognizer_OnDictationHypothesis;
+        dictationRecognizer.DictationHypothesis += ChangeStatus;
         dictationRecognizer.DictationResult += DictationRecognizer_OnDictationResult;
         dictationRecognizer.DictationComplete += DictationRecognizer_OnDictationComplete;
         dictationRecognizer.DictationError += DictationRecognizer_OnDictationError;
-        dictationRecognizer.DictationResult += ChangeStatus;
+        dictationRecognizer.DictationResult += DictationRecognizer_OnDictationResult;
         dictationRecognizer.Start();
     }
     private void CloseDictationEngine() //Resets the Dictionary
